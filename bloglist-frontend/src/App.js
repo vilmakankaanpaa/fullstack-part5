@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-// import loginRouter from '../../../Part4/bloglist/controllers/login'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
 
@@ -11,7 +11,8 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
@@ -24,13 +25,27 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
     }
   }, [])
+
+  const viewMessage = (message) => {
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
+  }
+
+  const viewErrorMessage = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 3000)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -40,14 +55,15 @@ const App = () => {
       })
       
       window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
+        'loggedBlogAppUser', JSON.stringify(user)
       ) 
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
+      viewMessage('Login succeeded')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      viewErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -60,25 +76,28 @@ const App = () => {
     )
     blogService.setToken('')
     setUser(null)
+    viewMessage('You´re logged out')
   }
 
-  const addBlog = event => {
-    console.log('Adding new blog')
+  const addBlog = async (event) => {
     event.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
+    try {
+      const blogObject = {
+        title: newTitle,
+        author: newAuthor,
+        url: newUrl,
+      }
+      const returnedBlog = await blogService.create(blogObject)
+      console.log('returned',returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+      viewMessage('New blog added.')
     }
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        console.log('returned',returnedBlog)
-        setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-      })
+    catch (exception) {
+      viewErrorMessage('Could not add blog: missing details.')
+    }
   }
 
   const handleTitleChange = (event) => {
@@ -142,7 +161,8 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={errorMessage} />
+      <Notification message={message} />
+      <ErrorMessage message={errorMessage} />
       { user === null ?
         loginForm() :
         <div>
