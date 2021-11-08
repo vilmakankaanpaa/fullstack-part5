@@ -121,6 +121,18 @@ const App = () => {
     </Togglable>
   )
 
+  const addLike = async (blogObject) => {
+    console.log('adding likes!')
+    try {
+      const updatedBlog = { ...blogObject, likes: blogObject.likes + 1 }
+      const returnedBlog = await blogService.addLike(updatedBlog)
+      setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : returnedBlog))
+      viewMessage('Your like was saved!')
+    } catch (error) {
+      viewErrorMessage('Like could not be added.')
+    }
+  }
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -134,7 +146,7 @@ const App = () => {
       } 
       { user != null && blogForm() }
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />
       )}    
     </div>
   )
