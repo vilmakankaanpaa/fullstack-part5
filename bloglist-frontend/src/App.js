@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
 
@@ -17,6 +19,7 @@ const App = () => {
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
 
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -87,6 +90,7 @@ const App = () => {
         author: newAuthor,
         url: newUrl,
       }
+      blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
       console.log('returned',returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
@@ -98,19 +102,6 @@ const App = () => {
     catch (exception) {
       viewErrorMessage('Could not add blog: missing details.')
     }
-  }
-
-  const handleTitleChange = (event) => {
-    console.log(event.target.value)
-    setNewTitle(event.target.value)
-  }
-  const handleAuthorChange = (event) => {
-    console.log(event.target.value)
-    setNewAuthor(event.target.value)
-  }
-  const handleUrlChange = (event) => {
-    console.log(event.target.value)
-    setNewUrl(event.target.value)
   }
 
   const loginForm = () => (
@@ -138,24 +129,17 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <>
-      <h2>Create new</h2>
-      <form onSubmit={addBlog}>
-        <input
-          value={newTitle}
-          onChange={handleTitleChange}
-        /><br/>
-        <input
-          value={newAuthor}
-          onChange={handleAuthorChange}
-        /><br/>
-        <input
-          value={newUrl}
-          onChange={handleUrlChange}
-        /><br/>       
-        <button type="create">save</button>
-      </form>  
-    </>
+    <Togglable buttonLabel='Create blog' ref={blogFormRef}>
+      <BlogForm
+        addBlog={addBlog}
+        newTitle={newTitle}
+        newAuthor={newAuthor}
+        newUrl={newUrl}
+        handleTitleChange={({ target }) => setNewTitle(target.value)}
+        handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+        handleUrlChange={({ target }) => setNewUrl(target.value)}
+      />
+    </Togglable>
   )
 
   return (
