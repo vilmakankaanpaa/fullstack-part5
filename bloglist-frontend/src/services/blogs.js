@@ -13,8 +13,6 @@ const getAll = () => {
 }
 
 const create = async newObject => {
-  console.log('service: creating new blog')
-  console.log('token', token)
   const config = {
     headers: { Authorization: token },
   }
@@ -23,11 +21,18 @@ const create = async newObject => {
 }
 
 const addLike = async blogObject => {
-  console.log('service: increasing likes')
-  console.log('blog:', blogObject)
   const id = blogObject.id
   const response = await axios.put(`${baseUrl}/${id}`, blogObject)
   return response.data
 } 
 
-export default { getAll, create, setToken, addLike }
+const remove = async blogObject => {
+  const id = blogObject.id
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
+export default { getAll, create, setToken, addLike, remove }

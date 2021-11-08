@@ -122,7 +122,6 @@ const App = () => {
   )
 
   const addLike = async (blogObject) => {
-    console.log('adding likes!')
     try {
       const updatedBlog = { ...blogObject, likes: blogObject.likes + 1 }
       const returnedBlog = await blogService.addLike(updatedBlog)
@@ -130,6 +129,20 @@ const App = () => {
       viewMessage('Your like was saved!')
     } catch (error) {
       viewErrorMessage('Like could not be added.')
+    }
+  }
+
+  const removeBlog = async (blogObject) => {
+    if (!window.confirm(`Are you sure you want to remove blog '${blogObject.title}' by ${blogObject.author}?`)) {
+      return
+    }
+    try {
+      const response = await blogService.remove(blogObject)
+      console.log(response)
+      setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+      viewMessage(`Blog by ${blogObject.author} removed.`)
+    } catch (error) {
+      viewErrorMessage('Blog could not be deleted.')
     }
   }
 
@@ -145,11 +158,18 @@ const App = () => {
         </div>
       } 
       { user != null && blogForm() }
-      {blogs
-        .sort((a,b) => b.likes-a.likes)
-        .map(blog =>
-          <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />
-        )}    
+      { blogs
+          .sort((a,b) => b.likes-a.likes)
+          .map(blog =>
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              onLike={() => addLike(blog)} 
+              onRemove={() => removeBlog(blog)}
+              currentUser={user}
+            />
+          )
+      }    
     </div>
   )
 }
