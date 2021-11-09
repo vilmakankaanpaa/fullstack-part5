@@ -12,4 +12,4 @@ const ErrorMessage = ({ message }) => {
   )
 }
 
-export default ErrorMessage;
+export default ErrorMessage

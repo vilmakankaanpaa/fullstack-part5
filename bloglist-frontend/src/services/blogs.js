@@ -24,7 +24,7 @@ const addLike = async blogObject => {
   const id = blogObject.id
   const response = await axios.put(`${baseUrl}/${id}`, blogObject)
   return response.data
-} 
+}
 
 const remove = async blogObject => {
   const id = blogObject.id
@@ -35,4 +35,5 @@ const remove = async blogObject => {
   return response.data
 }
 
-export default { getAll, create, setToken, addLike, remove }
+const exportedObjects = { getAll, create, setToken, addLike, remove }
+export default exportedObjects

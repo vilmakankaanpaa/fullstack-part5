@@ -12,8 +12,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs => {
       setBlogs( blogs )
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -53,10 +53,10 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
-      
+
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -68,8 +68,8 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-  }  
-  
+  }
+
   const handleLogout = () => {
     window.localStorage.removeItem(
       'loggedNoteappUser'
@@ -95,7 +95,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -104,7 +104,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -112,7 +112,7 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const blogForm = () => (
@@ -125,7 +125,8 @@ const App = () => {
     try {
       const updatedBlog = { ...blogObject, likes: blogObject.likes + 1 }
       const returnedBlog = await blogService.addLike(updatedBlog)
-      setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : returnedBlog))
+      setBlogs(blogs.map(blog =>
+        blog.id !== blogObject.id ? blog : returnedBlog))
       viewMessage('Your like was saved!')
     } catch (error) {
       viewErrorMessage('Like could not be added.')
@@ -133,7 +134,9 @@ const App = () => {
   }
 
   const removeBlog = async (blogObject) => {
-    if (!window.confirm(`Are you sure you want to remove blog '${blogObject.title}' by ${blogObject.author}?`)) {
+    if (!window.confirm(
+      `Are you sure you want to remove blog '${blogObject.title}' 
+      by ${blogObject.author}?`)) {
       return
     }
     try {
@@ -154,25 +157,26 @@ const App = () => {
       { user === null ?
         loginForm() :
         <div>
-          <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
+          <p>{user.name} logged-in
+            <button onClick={handleLogout}>logout</button>
+          </p>
         </div>
-      } 
-      { user != null && blogForm() }
+      }
+      { user !== null && blogForm() }
       { blogs
-          .sort((a,b) => b.likes-a.likes)
-          .map(blog =>
-            <Blog 
-              key={blog.id} 
-              blog={blog} 
-              onLike={() => addLike(blog)} 
-              onRemove={() => removeBlog(blog)}
-              currentUser={user}
-            />
-          )
-      }    
+        .sort((a,b) => b.likes-a.likes)
+        .map(blog =>
+          <Blog 
+            key={blog.id}
+            blog={blog}
+            onLike={() => addLike(blog)}
+            onRemove={() => removeBlog(blog)}
+            currentUser={user}
+          />
+        )
+      }
     </div>
   )
 }
-
 
 export default App
