@@ -82,8 +82,10 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
-      const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
+      await blogService.create(blogObject)
+      //setBlogs(blogs.concat(returnedBlog))
+      const blogs = await blogService.getAll()
+      setBlogs( blogs )
       viewMessage('New blog added.')
     }
     catch (exception) {
