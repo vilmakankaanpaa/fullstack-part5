@@ -88,3 +88,40 @@ test('blog url and likes are shown when button is clicked', () => {
   )
 
 })
+
+test('event handler is called twice when blog is liked twice', () => {
+
+  const mockOnRemove = jest.fn()
+  const mockOnLike = jest.fn()
+
+  const testUser = {
+    username: 'someuser'
+  }
+
+  const blog = {
+    title: 'Some title',
+    author: 'Someone Else',
+    url: 'www.blogurl.com',
+    likes: 2,
+    user: testUser
+  }
+
+  const component = render(
+    <Blog
+      blog={blog}
+      currentUser={testUser}
+      onRemove={mockOnRemove}
+      onLike={mockOnLike}
+    />
+  )
+
+  const viewButton = component.getByText('view')
+  fireEvent.click(viewButton)
+
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockOnLike.mock.calls).toHaveLength(2)
+
+})
