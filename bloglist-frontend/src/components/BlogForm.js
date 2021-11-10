@@ -27,17 +27,17 @@ const BlogForm = ({ createBlog }) => {
       <h2>Create new</h2>
       <form onSubmit={addBlog}>
         Title:
-        <input
+        <input id='title'
           value={newTitle}
           onChange={handleTitleChange}
         /><br/>
         Author:
-        <input
+        <input id='author'
           value={newAuthor}
           onChange={handleAuthorChange}
         /><br/>
         Url:
-        <input
+        <input id='url'
           value={newUrl}
           onChange={handleUrlChange}
         /><br/>
