@@ -1,0 +1,50 @@
+import React from 'react'
+import '@testing-library/jest-dom/extend-expect'
+import { render } from '@testing-library/react'
+import Blog from './Blog'
+
+test('renders only teaser content', () => {
+
+  const mockOnRemove = jest.fn()
+  const mockOnLike = jest.fn()
+
+  const testUser = {
+    username: 'someuser'
+  }
+
+  const blog = {
+    title: 'Some title',
+    author: 'Someone Else',
+    url: 'www.blogurl.com',
+    likes: 2,
+    user: testUser
+  }
+
+
+  const component = render(
+    <Blog
+      blog={blog}
+      currentUser={testUser}
+      onRemove={mockOnRemove}
+      onLike={mockOnLike}
+    />
+  )
+
+  component.debug()
+
+  expect(component.container).toHaveTextContent(
+    'Some title'
+  )
+
+  expect(component.container).toHaveTextContent(
+    'Someone Else'
+  )
+
+  expect(component.container).not.toHaveTextContent(
+    'www.blogurl.com'
+  )
+
+  const divTeaser = component.container.querySelector('.teaserContent')
+  expect(divTeaser).toBeDefined()
+
+})
