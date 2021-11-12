@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
+import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
@@ -72,7 +73,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem(
-      'loggedNoteappUser'
+      'loggedBlogappUser'
     )
     blogService.setToken('')
     setUser(null)
@@ -92,36 +93,6 @@ const App = () => {
       viewErrorMessage('Could not add blog: missing details.')
     }
   }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
-  const blogForm = () => (
-    <Togglable buttonLabel='Create blog' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog}/>
-    </Togglable>
-  )
 
   const addLike = async (blogObject) => {
     try {
@@ -151,6 +122,30 @@ const App = () => {
     }
   }
 
+  const loginForm = () => (
+    <LoginForm
+      handleLogin={handleLogin}
+      username={username}
+      passsword={password}
+      handleUsernameChange={({ target }) => setUsername(target.value)}
+      handlePasswordChange={({ target }) => setPassword(target.value)}
+    />
+  )
+
+  const blogForm = () => (
+    <Togglable buttonLabel='Create blog' ref={blogFormRef}>
+      <BlogForm createBlog={addBlog}/>
+    </Togglable>
+  )
+
+  const logoutView = () => (
+    <div>
+      <p>{user.name} logged-in
+        <button onClick={handleLogout}>logout</button>
+      </p>
+    </div>
+  )
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -158,11 +153,7 @@ const App = () => {
       <ErrorMessage message={errorMessage} />
       { user === null ?
         loginForm() :
-        <div>
-          <p>{user.name} logged-in
-            <button onClick={handleLogout}>logout</button>
-          </p>
-        </div>
+        logoutView()
       }
       { user !== null && blogForm() }
       { blogs
