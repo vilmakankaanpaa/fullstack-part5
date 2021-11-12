@@ -73,7 +73,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem(
-      'loggedBlogappUser'
+      'loggedBlogAppUser'
     )
     blogService.setToken('')
     setUser(null)
