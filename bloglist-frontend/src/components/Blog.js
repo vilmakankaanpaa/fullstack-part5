@@ -40,7 +40,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
   )
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       { !visible
         ? blogTeaser()
         : blogDetails()

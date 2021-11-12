@@ -68,10 +68,11 @@ describe('Blog app', function() {
       it('one of those can be liked', function () {
         cy.contains('first blog').find('#view-button').click()
         cy.contains('first blog').find('#like-button').click()
-        cy.contains('first blog').should('contain', 'likes 0')
+        cy.contains('first blog').find('#view-button').click()
+        cy.contains('first blog').should('contain', 'likes 1')
       })
 
-      it.only('user who created the blog can remove it', function() {
+      it('user who created the blog can remove it', function() {
         cy.contains('first blog').find('#view-button').click()
         cy.contains('first blog').find('#remove-button').click()
 
@@ -79,6 +80,27 @@ describe('Blog app', function() {
         cy.get('html').should('Blog by first author removed')
       })
 
+      describe('and those have differen number of likes', function () {
+        beforeEach(function () {
+          cy.contains('third blog').find('#view-button').click()
+          cy.contains('third blog').find('#like-button').click()
+            .then(() => {
+              cy.contains('second blog').find('#view-button').click()
+              cy.contains('second blog').find('#like-button').click()
+            })
+          cy.contains('second blog').should('contain', 'likes 1')
+            .then(() => {
+              cy.contains('second blog').find('#like-button').click()
+            })
+          cy.contains('second blog').should('contain','likes 2')
+        })
+
+        it.only('blogs are sorted by their likes', function() {
+
+          cy.get('.bloglist').get('.blog:first').should('contain','second blog')
+          cy.get('.bloglist').get('.blog:last').should('contain','first blog')
+        })
+      })
     })
   })
 })

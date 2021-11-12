@@ -156,18 +156,20 @@ const App = () => {
         logoutView()
       }
       { user !== null && blogForm() }
-      { blogs
-        .sort((a,b) => b.likes-a.likes)
-        .map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            onLike={() => addLike(blog)}
-            onRemove={() => removeBlog(blog)}
-            currentUser={user}
-          />
-        )
-      }
+      <div className='bloglist'>
+        { blogs
+          .sort((a,b) => b.likes-a.likes)
+          .map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              onLike={() => addLike(blog)}
+              onRemove={() => removeBlog(blog)}
+              currentUser={user}
+            />
+          )
+        }
+      </div>
     </div>
   )
 }
