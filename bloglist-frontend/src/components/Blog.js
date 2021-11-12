@@ -25,7 +25,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
 
   const blogTeaser = () => (
     <div className='teaserContent'>
-      {blog.title} by {blog.author} <button onClick={toggleVisibility}>view</button>
+      {blog.title} by {blog.author} <button id='view-button' onClick={toggleVisibility}>view</button>
     </div>
   )
 
@@ -33,7 +33,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
     <div className='detailedContent'>
       {blog.title} <button onClick={toggleVisibility}>hide</button>
       <br/> {blog.url}
-      <br/> likes {blog.likes} <button onClick={onLike}>like</button>
+      <br/> likes {blog.likes} <button id='like-button' onClick={onLike}>like</button>
       <br/> {blog.user.username}
       { (currentUser.username===blog.user.username) && removeButton() }
     </div>
