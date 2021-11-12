@@ -84,7 +84,6 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       await blogService.create(blogObject)
-      //setBlogs(blogs.concat(returnedBlog))
       const blogs = await blogService.getAll()
       setBlogs( blogs )
       viewMessage('New blog added.')
@@ -98,9 +97,9 @@ const App = () => {
   const addLike = async (blogObject) => {
     try {
       const updatedBlog = { ...blogObject, likes: blogObject.likes + 1 }
-      const returnedBlog = await blogService.addLike(updatedBlog)
-      setBlogs(blogs.map(blog =>
-        blog.id !== blogObject.id ? blog : returnedBlog))
+      await blogService.addLike(updatedBlog)
+      const blogs = await blogService.getAll()
+      setBlogs( blogs )
       viewMessage('Your like was saved!')
     } catch (error) {
       viewErrorMessage('Like could not be added.')

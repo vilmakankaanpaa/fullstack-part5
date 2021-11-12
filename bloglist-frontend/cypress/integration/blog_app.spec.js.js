@@ -65,11 +65,20 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'third blog', author: 'third author', url: 'www.thirdurl.com'})
       })
 
-      it.only('one of those can be liked', function () {
+      it('one of those can be liked', function () {
         cy.contains('first blog').find('#view-button').click()
         cy.contains('first blog').find('#like-button').click()
         cy.contains('first blog').should('contain', 'likes 0')
       })
+
+      it.only('user who created the blog can remove it', function() {
+        cy.contains('first blog').find('#view-button').click()
+        cy.contains('first blog').find('#remove-button').click()
+
+        cy.get('html').should('not.contain', 'first blog')
+        cy.get('html').should('Blog by first author removed')
+      })
+
     })
   })
 })

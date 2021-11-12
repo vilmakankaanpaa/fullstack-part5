@@ -19,7 +19,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
 
   const removeButton = () => (
     <>
-      <br/><button onClick={onRemove}>Remove</button>
+      <br/><button id='remove-button' onClick={onRemove}>Remove</button>
     </>
   )
 
