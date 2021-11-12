@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpbG1hayIsImlkIjoiNjE2ZmZkOWM5MTgzMGZmZTYzODRmODYxIiwiaWF0IjoxNjM1MzIyMzI0fQ.P1zHeRCZNQ5c6Ca6MWdR81tuQmakcHmXNoVVr8DhoBg
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpbG1hayIsImlkIjoiNjE2ZmZkOWM5MTgzMGZmZTYzODRmODYxIiwiaWF0IjoxNjM2NzE5NDA0fQ.7uisLQZNdz3G3t894iXNB7SVyWdtR0gKju8J2WfFUHg
 
 {
-  "title": "Testblog14",
-  "author": "Author Catorce",
+  "title": "Testblog20",
+  "author": "Author Veinti",
   "url": "https://someotherurl.com",
-  "likes": 6
+  "likes": 20
 }

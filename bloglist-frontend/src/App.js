@@ -52,7 +52,7 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username, password
       })
 
       window.localStorage.setItem(
@@ -91,6 +91,7 @@ const App = () => {
     }
     catch (exception) {
       viewErrorMessage('Could not add blog: missing details.')
+      console.log(exception)
     }
   }
 
@@ -140,7 +141,7 @@ const App = () => {
 
   const logoutView = () => (
     <div>
-      <p>{user.name} logged-in
+      <p>{user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
     </div>
